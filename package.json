@@ -13,6 +13,6 @@
     "node-schedule": "^2.1.1",
     "nodemon": "^2.0.22",
     "sequelize": "^6.31.1",
-    "venom-bot": "^5.0.1"
+    "venom-bot": "^5.0.6"
   }
 }

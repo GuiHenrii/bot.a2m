@@ -12,3 +12,4 @@ try {
 }
 
 export default sequelize;
+''
