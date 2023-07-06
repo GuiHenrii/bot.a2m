@@ -91,7 +91,9 @@ function start(client) {
             // Chama o dialogo 1
             dialogoInicial(client, message);
             const estado = 2;
-            atualizaStage(cliente.id, estado);
+            const dialogo = "dialogoInicial"
+            atualizaStage(cliente.id, estado, dialogo);
+
           }
         } else {
           //chama dialogo inicial
@@ -101,29 +103,61 @@ function start(client) {
             // chama o dialogo 1
             dialogoInicial(client, message);
             const estado = 2;
-            atualizaStage(id, estado);
+            const dialogo = "dialogoInicial"
+            atualizaStage(cliente.id, estado, dialogo);
           }
           //Pergunta se deseja sac ou orçamento
           else if (message.body && stage === 2) {
             dialogoCaminho(client, message);
             const estado = 3;
-            atualizaStage(id, estado);
+            const dialogo = "dialogoCaminho"
+            atualizaStage(cliente.id, estado, dialogo);
           }
           //Caso queira o orcamento
           else if (message.body === "1" && stage === 3) {
             dialogoOrcamento(client, message);
             const estado = 4;
-            atualizaStage(id, estado);
+            const dialogo = "dialogoOrcamento"
+            atualizaStage(cliente.id, estado, dialogo);
           }
           //caso queira falar no sac
           else if (message.body === "2" && stage === 3) {
             dialogoSac(client, message);
             const estado = 4;
-            atualizaStage(id, estado);
+            const dialogo = "dialogoSac"
+            atualizaStage(cliente.id, estado, dialogo);
           } else if (message.body && stage === 4) {
             dialogofinal(client, message);
             const estado = 4;
-            atualizaStage(id, estado);
+            const dialogo = "dialogofinal"
+            atualizaStage(cliente.id, estado, dialogo);
+          }else if(message.body === "0"){
+            const id = cliente.id
+            const dialogo = Cliente.findOne({where: {id: id}})
+
+            switch(dialogo){
+              case 'dialogoInicial':
+                dialogoInicial(client, message);
+                atualizaStage(cliente.id, 2, "dialogoInicial");
+                break;
+              case 'dialogoCaminho':
+                dialogoCaminho(client, message);
+                atualizaStage(cliente.id, 3, "dialogoCaminho");
+                break;
+              case 'dialogoOrcamento':
+                dialogoOrcamento(client, message);
+                atualizaStage(cliente.id, 4, "dialogoOrcamento");
+                break;
+              case 'dialogoSac':
+                dialogoSac(client, message);
+                atualizaStage(cliente.id, 4, "dialogoSac");
+                break;
+              default:
+                dialogofinal(client, message);
+                atualizaStage(cliente.id, 4, "dialogofinal");
+                break;                
+            }
+
           }
         }
       }
