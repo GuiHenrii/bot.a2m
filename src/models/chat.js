@@ -24,10 +24,9 @@ const Clientes = sequelize.define("clientes", {
     type: DataTypes.INTEGER,
     allowNull: true,
   },
-  dialogo: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+  dialogo:{
+    type:DataTypes.STRING,
+    allowNull: true
+  }
 });
-
 export default Clientes;

@@ -5,20 +5,12 @@ import moment from "moment";
 import { create } from "venom-bot";
 import { Op } from "sequelize";
 import atualizaStage from "./functions/stage.js";
-import dialogoCaminho1 from "./dialogo/dialogoCaminho1.js";
-import dialogoCaminho2 from "./dialogo/dialogoCaminho2.js";
+import dialogoCaminho from "./dialogo/dialogoCaminho.js";
 import dialogoInicial from "./dialogo/dialogoInicial.js";
 import dialogoOrcamento from "./dialogo/dialogoOrcamento.js";
 import dialogoSac from "./dialogo/dialogoSac.js";
 import dialogoCredencial from "./dialogo/dialogoCredencial.js";
 import dialogofinal from "./dialogo/dialogofinal.js";
-import dialogoEstante from "./dialogo/dialogoEstante.js";
-import dialogoMovel from "./dialogo/dialogoMovel.js";
-import dialogoAtendente from "./dialogo/dialogoAtendente.js";
-import dialogoPlanejado from "./dialogo/dialogoPlanejado.js";
-import dialogoQuadro from "./dialogo/dialogoQuadros.js";
-import dialogoduvida1 from "./dialogo/dialogoduvida1.js";
-import dialogoduvida2 from "./dialogo/dialogoDuvida2.js";
 
 function start(client) {
   console.log("Cliente Venom iniciado!");
@@ -72,142 +64,118 @@ function start(client) {
 
       console.log("Todas as mensagens foram enviadas!");
     })();
-  });
 
-  // Bot Receptivo
-  client.onMessage(async (message) => {
-    console.log(message);
-    // Verifica se a mensagem não é de grupo
-    if (!message.isGroupMsg) {
-      const tel = message.from.replace(/@c\.us/g, ""); // recebe o número de telefone do cliente
-      const cliente = await Cliente.findOne({
-        raw: true,
-        where: { telefone: tel },
-      }); // Pesquisa o cliente no banco de dados
+    // Bote Receptivo
+    client.onMessage(async (message) => {
+      console.log(message);
+      // Verifica se a messagem é de grupo
+      if (message.isGroupMsg === false) {
+        const tel = message.from.replace(/@c\.us/g, ""); // recebe o numero de telefone do cliente
+        const cliente = await Cliente.findOne({
+          raw: true,
+          where: { telefone: tel },
+        }); // Pesquisa o cliente no banco de dados
 
-      if (!cliente) {
-        const telefoneContato = message.from.replace(/@c\.us/g, "");
-        const dados = {
-          nome: message.notifyName,
-          telefone: telefoneContato,
-          atendido: 1,
-          assunto: "contato Whatsapp",
-          stage: 1,
-        };
-        console.log(dados);
-        const cliente = await Cliente.create(dados);
-        if (message.body && dados.stage === 1) {
-          // Chama o diálogo inicial
-          dialogoInicial(client, message);
-          const estado = 2;
-          const dialogo = "dialogoinicial";
-          atualizaStage(cliente.id, estado, dialogo);
+        if (!cliente) {
+          const telefoneContao = message.from.replace(/@c\.us/g, "");
+          const dados = {
+            nome: message.notifyName,
+            telefone: telefoneContao,
+            atendido: 1,
+            assunto: "contato Whatspp",
+            stage: 1,
+          };
+          console.log(dados);
+          const cliente = await Cliente.create(dados);
+          if (message.body && dados.stage === 1) {
+            // Chama o dialogo 1
+            dialogoInicial(client, message);
+            const estado = 2;
+            const dialogo = "dialogoInicial";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+        } else {
+          //chama dialogo inicial
+          const id = cliente.id;
+          const stage = cliente.stage;
+          if (message.body && stage === 1) {
+            // chama o dialogo 1
+            dialogoInicial(client, message);
+            const estado = 2;
+            const dialogo = "dialogoInicial";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //Pergunta se deseja sac ou orçamento
+          else if (message.body && stage === 2) {
+            dialogoCaminho(client, message);
+            const estado = 3;
+            const dialogo = "dialogoCaminho";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //Caso queira o orcamento
+          else if (message.body === "1" && stage === 3) {
+            dialogoOrcamento(client, message);
+            const estado = 4;
+            const dialogo = "dialogoOrcamento";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //caso queira falar no sac
+          else if (message.body === "2" && stage === 3) {
+            dialogoSac(client, message);
+            const estado = 4;
+            const dialogo = "dialogoSac";
+            atualizaStage(cliente.id, estado, dialogo);
+          } else if (message.body && stage === 4) {
+            dialogofinal(client, message);
+            const estado = 4;
+            const dialogo = "dialogofinal";
+            atualizaStage(cliente.id, estado, dialogo);
+          } else if (message.body === "0") {
+            const id = cliente.id;
+            const dialogo = Cliente.findOne({ where: { id: id } });
+
+            switch (dialogo) {
+              case "dialogoInicial":
+                dialogoInicial(client, message);
+                atualizaStage(cliente.id, 2, "dialogoInicial");
+                break;
+              case "dialogoCaminho":
+                dialogoCaminho(client, message);
+                atualizaStage(cliente.id, 3, "dialogoCaminho");
+                break;
+              case "dialogoOrcamento":
+                dialogoOrcamento(client, message);
+                atualizaStage(cliente.id, 4, "dialogoOrcamento");
+                break;
+              case "dialogoSac":
+                dialogoSac(client, message);
+                atualizaStage(cliente.id, 4, "dialogoSac");
+                break;
+              default:
+                dialogofinal(client, message);
+                atualizaStage(cliente.id, 4, "dialogofinal");
+                break;
+            }
+          }
         }
-      } else {
-        //chama dialogo inicial
-        const id = cliente.id;
-        const stage = cliente.stage;
-        switch (stage) {
-          case 1:
-            if (message.body) {
-              // chama o diálogo 1
-              dialogoInicial(client, message);
-              const estado = 2;
-              const dialogo = "dialogoinicial";
-              atualizaStage(cliente.id, estado, dialogo);
-            }
-            break;
-          case 2:
-            if (message.body === "1") {
-              dialogoCaminho1(client, message);
-              const estado = 3;
-              const dialogo = "dialogocaminho1";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "2") {
-              dialogoCaminho2(client, message);
-              const estado = 3;
-              const dialogo = "dialogocaminho2";
-              atualizaStage(cliente.id, estado, dialogo);
-            }
-            break;
-          case 3:
-            if (message.body === "1") {
-              dialogoOrcamento(client, message);
-              const estado = 4;
-              const dialogo = "dialogoorcamento";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "2") {
-              dialogoSac(client, message);
-              const estado = 4;
-              const dialogo = "dialogoSac";
-              atualizaStage(cliente.id, estado, dialogo);
-            }
-            break;
-          case 4:
-            if (message.body === "1") {
-              dialogoMovel(client, message);
-              const estado = 5;
-              const dialogo = "dialogomovel";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "2") {
-              dialogoPlanejado(client, message);
-              const estado = 7;
-              const dialogo = "dialogoPlanejado";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "3") {
-              dialogoEstante(client, message);
-              const estado = 7;
-              const dialogo = "dialogoEstante";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "4") {
-              dialogoQuadro(client, message);
-              const estado = 7;
-              const dialogo = "dialogoQuadro";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "5") {
-              dialogoAtendente(client, message);
-              const estado = 7;
-              const dialogo = "dialogoAtendente";
-              atualizaStage(cliente.id, estado, dialogo);
-            }
-            break;
-          case 5:
-            if (message.body === "1" || message.body === "2") {
-              dialogoAtendente(client, message);
-              const estado = 6;
-              const dialogo = "dialogoAtendente";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "3") {
-              dialogoduvida2(client, message);
-              const estado = 15;
-              const dialogo = "dialogoduvida2";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "0") {
-              const cliente = await Cliente.findOne({
-                raw: true,
-                where: { id: id },
-              });
-              const newStage = cliente.stage;
-              const estado = newStage - 1;
-              atualizaStage(id, estado);
-            }
-            break;
-          case 7:
-            if (message.body === "1" || message.body === "2") {
-              dialogoAtendente(client, message);
-              const estado = 8;
-              const dialogo = "dialogoAtendente";
-              atualizaStage(cliente.id, estado, dialogo);
-            } else if (message.body === "0") {
-              dialogoOrcamento(client, message);
-              const estado = 5;
-              const dialogo = "dialogoOrcamento";
-              atualizaStage(cliente.id, estado, dialogo);
-            }
-            break;
-          default:
-            break;
       }
     });
-  }
-
+  });
+}
+const venomOptions = {
+  multiDevice: false,
+  session: "Testes",
+  createPathFileToken: true,
+  waitForLogin: true,
+  createPathFileToken: true,
+  disableReadReceipts: true, // Desativa a marcação de mensagens lidas
+};
+create(venomOptions)
+  .then((client) => start(client))
+  .catch((error) => {
+    console.log(error);
+  });
+conn
+  .sync()
+  .then(() => {})
+  .catch((err) => console.log(err));
