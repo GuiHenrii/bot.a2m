@@ -1,6 +1,6 @@
-async function dialogoOrcamento(client, message) {
+async function dialogoPlanejado(client, message) {
   const texto =
-  "Certo! Para qual item você gostaria de um orçamento?\n1 - Movéis\n2 - Planejados\n3 - Estantes\n4 - Quadros\n5 - Mesas e aparadores\n0 - Voltar ao Menu"
+    "1 - possui projeto\n2 - Falar com nosso atendente\n3 - não possui projeto\n0 - Voltar ao Menu\nEnvie-nos o projeto pelo e-mail :\nProjetistas@tendenci.com.br";
 
   await client
     .sendText(message.from, texto)
@@ -12,4 +12,4 @@ async function dialogoOrcamento(client, message) {
     });
 }
 
-export default dialogoOrcamento;
+export default dialogoPlanejado;

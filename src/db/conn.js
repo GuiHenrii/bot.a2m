@@ -12,4 +12,4 @@ try {
 }
 
 export default sequelize;
-''
+("");
