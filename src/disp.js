@@ -1,3 +1,4 @@
+import conn from "./db/conn.js";
 import Cliente from "./models/chat.js";
 import schedule from "node-schedule";
 import moment from "moment";
@@ -61,15 +62,21 @@ function start(client) {
             );
           });
 
-        await atualizaAtendimento(id);
+        atualizaAtendimento(id);
+
+        async function atualizaAtendimento(id) {
+          const atendido = 1;
+          await Cliente.update({ atendido }, { where: { id: id } });
+        }
       }
 
       console.log("Todas as mensagens foram enviadas!");
     })();
   });
 
-  // BotReceptivo
+  // Bot Receptivo
   client.onMessage(async (message) => {
+    console.log(message);
     // Verifica se a mensagem não é de grupo
     if (!message.isGroupMsg) {
       const tel = message.from.replace(/@c\.us/g, ""); // recebe o número de telefone do cliente
@@ -200,17 +207,7 @@ function start(client) {
             break;
           default:
             break;
-        }
       }
-    }
-  });
-}
+    });
+  }
 
-// Inicie o Venom Bot aqui
-create({
-  session: "Tendenci", // Nome da sessão
-})
-  .then((client) => start(client))
-  .catch((erro) => {
-    console.log(erro);
-  });
