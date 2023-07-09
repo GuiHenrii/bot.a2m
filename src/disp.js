@@ -233,6 +233,9 @@ function start(client) {
           const dialogo = "dialogoAtendente";
           atualizaStage(cliente.id, estado, dialogo);
         }
+        // coloque aqui os proximos ifs que esta faltando
+
+
       }
     }
   });
