@@ -1,4 +1,4 @@
-async function dialogoQuadro(client, message) {
+async function dialogoQuadros(client, message) {
   const texto =
     "1 - personalizar medida\n2 - falar com um atendente\n3 - Duvidas frequentes sobre Quadros\n0 - Voltar ao Menu\nsegue nossa categoria de todos os quadros\nhttps://www.tendenci.com.br/collections/estantes";
 
@@ -12,4 +12,4 @@ async function dialogoQuadro(client, message) {
     });
 }
 
-export default dialogoQuadro;
+export default dialogoQuadros;

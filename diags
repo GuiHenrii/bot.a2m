@@ -5,15 +5,7 @@ import moment from "moment";
 import { create } from "venom-bot";
 import { Op } from "sequelize";
 import atualizaStage from "./functions/stage.js";
-import dialogoCaminho1 from "./dialogo/dialogoCaminho1.js";
-import dialogoCaminho2 from "./dialogo/dialogoCaminho2.js";
-import dialogoduvida1 from "./dialogo/dialogoduvida1.js";
-import dialogoduvida2 from "./dialogo/dialogoduvida2.js";
-import dialogoEstante from "./dialogo/dialogoEstante.js";
-import dialogoMovel from "./dialogo/dialogoMovel.js";
-import dialogoPlanejado from "./dialogo/dialogoPlanejado.js";
-import dialogoQuadros from "./dialogo/dialogoQuadros.js";
-import dialogoAtendente from "./dialogo/dialogoAtendente.js";
+import dialogoCaminho from "./dialogo/dialogoCaminho.js";
 import dialogoInicial from "./dialogo/dialogoInicial.js";
 import dialogoOrcamento from "./dialogo/dialogoOrcamento.js";
 import dialogoSac from "./dialogo/dialogoSac.js";
@@ -75,97 +67,102 @@ function start(client) {
 
     // Bote Receptivo
     client.onMessage(async (message) => {
-      // Verifica se a mensagem não é de grupo
-      if (!message.isGroupMsg) {
-        const tel = message.from.replace(/@c\.us/g, ""); // recebe o número de telefone do cliente
+      console.log(message);
+      // Verifica se a messagem é de grupo
+      if (message.isGroupMsg === false) {
+        const tel = message.from.replace(/@c\.us/g, ""); // recebe o numero de telefone do cliente
         const cliente = await Cliente.findOne({
           raw: true,
           where: { telefone: tel },
         }); // Pesquisa o cliente no banco de dados
 
         if (!cliente) {
-          const telefoneContato = message.from.replace(/@c\.us/g, "");
+          const telefoneContao = message.from.replace(/@c\.us/g, "");
           const dados = {
             nome: message.notifyName,
-            telefone: telefoneContato,
+            telefone: telefoneContao,
             atendido: 1,
-            assunto: "contato Whatsapp",
+            assunto: "contato Whatspp",
             stage: 1,
           };
           console.log(dados);
           const cliente = await Cliente.create(dados);
           if (message.body && dados.stage === 1) {
+            // Chama o dialogo 1
             dialogoInicial(client, message);
             const estado = 2;
             const dialogo = "dialogoInicial";
             atualizaStage(cliente.id, estado, dialogo);
           }
         } else {
+          //chama dialogo inicial
           const id = cliente.id;
           const stage = cliente.stage;
-
-          if (message.body === "0") {
+          if (message.body && stage === 1) {
+            // chama o dialogo 1
+            dialogoInicial(client, message);
+            const estado = 2;
+            const dialogo = "dialogoInicial";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //Pergunta se deseja sac ou orçamento
+          else if (message.body && stage === 2) {
+            dialogoCaminho(client, message);
+            const estado = 3;
+            const dialogo = "dialogoCaminho";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //Caso queira o orcamento
+          else if (message.body === "1" && stage === 3) {
+            dialogoOrcamento(client, message);
+            const estado = 4;
+            const dialogo = "dialogoOrcamento";
+            atualizaStage(cliente.id, estado, dialogo);
+          }
+          //caso queira falar no sac
+          else if (message.body === "2" && stage === 3) {
+            dialogoSac(client, message);
+            const estado = 4;
+            const dialogo = "dialogoSac";
+            atualizaStage(cliente.id, estado, dialogo);
+          } else if (message.body && stage === 4) {
+            dialogofinal(client, message);
+            const estado = 4;
+            const dialogo = "dialogofinal";
+            atualizaStage(cliente.id, estado, dialogo);
+          } else if (message.body === "0") {
             const id = cliente.id;
-            const dialogo = await Cliente.findOne({
+            await Cliente.findOne({
               attributes: dialogo,
               where: {
-                id: id,
-              },
+               id: id
+              }
             });
             switch (dialogo) {
               case "dialogoInicial":
                 dialogoInicial(client, message);
                 atualizaStage(cliente.id, 2, "dialogoInicial");
                 break;
-              case "dialogoCaminho1":
+              case "dialogoCaminho":
                 dialogoCaminho(client, message);
-                atualizaStage(cliente.id, 3, "dialogoCaminho1");
+                atualizaStage(cliente.id, 3, "dialogoCaminho");
                 break;
               case "dialogoOrcamento":
                 dialogoOrcamento(client, message);
                 atualizaStage(cliente.id, 4, "dialogoOrcamento");
                 break;
-              case "dialogoCaminho2":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 3, "dialogoCaminho2");
-                break;
-              case "dialogoAtendente":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 4, "dialogoAtendente");
-                break;
-              case "dialogoduvida1":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 20, "dialogoduvida1");
-                break;
-              case "dialogoduvida2":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 15, "dialogoduvida2");
-                break;
-              case "dialogoEstante":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 7, "dialogoEstante");
-                break;
-              case "dialogoMovel":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 5, "dialogoMovel");
-                break;
-              case "dialogoOrcamento":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 4, "dialogoOrcamento");
-                break;
-              case "dialogoPlanejado":
-                dialogoSac(client, message);
-                atualizaStage(cliente.id, 7, "dialogoPlanejado");
-                break;
-              case "dialogoQuadros":
-                dialogoQuadros(client, message);
-                atualizaStage(cliente.id, 7, "dialogoQuadros");
-                break;
               case "dialogoSac":
                 dialogoSac(client, message);
                 atualizaStage(cliente.id, 4, "dialogoSac");
                 break;
+                case "dialogoSac":
+                dialogoSac(client, message);
+                atualizaStage(cliente.id, 4, "dialogoSac");
+                break;
+                
               default:
+                dialogofinal(client, message);
+                atualizaStage(cliente.id, 4, "dialogofinal");
                 break;
             }
           }
@@ -174,15 +171,6 @@ function start(client) {
     });
   });
 }
-  if (stage === 1 && message.body) {
-  dialogoInicial(client, message);
-  const estado = 2;
-  const dialogo = "dialogoInicial";
-  atualizaStage(cliente.id, estado, dialogo);
-} else if (stage === 2) {
-  const message = message.body;
-}
-
 const venomOptions = {
   multiDevice: false,
   session: "Testes",
