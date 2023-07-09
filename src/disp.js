@@ -232,8 +232,15 @@ function start(client) {
           const estado = 8;
           const dialogo = "dialogoAtendente";
           atualizaStage(cliente.id, estado, dialogo);
+        } else if (message.body === "5" && stage === "3"){
+          dialogoAtendente(client, message);
+          const estado = 9;
+          const dialogo = "dialogoAtendente"
+          atualizaStage(cliente.id, estado, dialogo);
         }
+
         // coloque aqui os proximos ifs que esta faltando
+
 
 
       }
