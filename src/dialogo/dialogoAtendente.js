@@ -3,9 +3,11 @@ async function dialogoAtendente(client, message) {
 
   await client
     .sendText(message.from, texto)
-    .then(() => {
-      console.log('Result: ', "result"); //return object success
-    })
+    .then(async () => {
+        // Marcar a mensagem como não lida
+        const result = await client.markUnseenMessage(message.from);
+        console.log('Chat marcado como não visto:', result);
+      })
     .catch((erro) => {
       console.error('Erro ao enviar mensagem ', erro); //return object error
     });

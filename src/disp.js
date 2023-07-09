@@ -130,23 +130,23 @@ function start(client) {
               break;
             case "dialogoAtendente":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 4, "dialogoAtendente");
+              atualizaStage(cliente.id, 10, "dialogoAtendente");
               break;
             case "dialogoduvida1":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 20, "dialogoduvida1");
+              atualizaStage(cliente.id, 10, "dialogoduvida1");
               break;
             case "dialogoduvida2":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 15, "dialogoduvida2");
+              atualizaStage(cliente.id, 10, "dialogoduvida2");
               break;
             case "dialogoEstante":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 7, "dialogoEstante");
+              atualizaStage(cliente.id, 10, "dialogoEstante");
               break;
             case "dialogoMovel":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 5, "dialogoMovel");
+              atualizaStage(cliente.id, 6, "dialogoMovel");
               break;
             case "dialogoOrcamento":
               dialogoSac(client, message);
@@ -162,7 +162,7 @@ function start(client) {
               break;
             case "dialogoSac":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 4, "dialogoSac");
+              atualizaStage(cliente.id, 5, "dialogoSac");
               break;
             default:
               break;
@@ -172,77 +172,94 @@ function start(client) {
            const estado = 2;
            const dialogo = "dialogoinicial";
            atualizaStage(cliente.id, estado, dialogo);
-        }else if (message.body === "1" && stage === 2) {
-          dialogoCaminho1(client, message);
-          const estado = 3;
-          const dialogo = "dialogocaminho1";
-          atualizaStage(cliente.id, estado, dialogo);
-         } else if (message.body === "2" && stage === 2) {
-          dialogoCaminho2(client, message);
-          const estado = 3;
-          const dialogo = "dialogocaminho2";
-          atualizaStage(cliente.id, estado, dialogo);
-         }if (message.body === "1" && stage === 3) {
-          dialogoOrcamento(client, message);
-          const estado = 4;
-          const dialogo = "dialogoorcamento";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "2" && stage === 2) {
-          dialogoSac(client, message);
-          const estado = 4;
-          const dialogo = "dialogoSac";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "1" && stage === 4) {
-          dialogoMovel(client, message);
-          const estado = 5;
-          const dialogo = "dialogomovel";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "2" && stage === 4) {
-          dialogoPlanejado(client, message);
-          const estado = 7;
-          const dialogo = "dialogoPlanejado";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "3") {
-          dialogoEstante(client, message);
-          const estado = 7;
-          const dialogo = "dialogoEstante";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "4" && stage === 4) {
-          dialogoQuadro(client, message);
-          const estado = 7;
-          const dialogo = "dialogoQuadro";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "5") {
-          dialogoAtendente(client, message);
-          const estado = 7;
-          const dialogo = "dialogoAtendente";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "1" || message.body === "2") {
-          dialogoAtendente(client, message);
-          const estado = 6;
-          const dialogo = "dialogoAtendente";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "3" && stage === 5) {
-          dialogoduvida2(client, message);
-          const estado = 15;
-          const dialogo = "dialogoduvida2";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "1" || message.body === "2") {
-          dialogoAtendente(client, message);
-          const estado = 8;
-          const dialogo = "dialogoAtendente";
-          atualizaStage(cliente.id, estado, dialogo);
-        } else if (message.body === "5" && stage === "3"){
-          dialogoAtendente(client, message);
-          const estado = 9;
-          const dialogo = "dialogoAtendente"
-          atualizaStage(cliente.id, estado, dialogo);
+        }else if (stage === 2){   
+          const mensagem = message.body
+          switch(mensagem){
+            case "1":
+              dialogoCaminho1(client, message);
+              atualizaStage(cliente.id, 3, "dialogocaminho1");
+              break;
+            case '2':
+              dialogoCaminho2(client, message);
+              atualizaStage(cliente.id, 3, "dialogocaminho2");
+              break;
+          }
+        }else if(stage === 3){
+          const mensagem = message.body
+          switch(mensagem){
+            case "1":
+              dialogoOrcamento(client, message)
+              atualizaStage(cliente.id, 4, "dialogocaminho2");
+              break;
+            case "2":
+              dialogoSac(client, message)
+              atualizaStage(cliente.id, 5, "dialogocaminho2");
+              break;
+            case "3":
+              dialogoAtendente(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2"); // Verificar se o stage esta correto
+              break;
+          }
+        }else if(stage === 4){
+          const mensagem = message.body
+          switch(mensagem){
+            case "1":
+              dialogoMovel(client, message)
+              atualizaStage(cliente.id, 6, "dialogocaminho2");
+              break
+            case "2":
+              dialogoPlanejado(client, message)
+              atualizaStage(cliente.id, 7, "dialogocaminho2");
+              break
+            case "3":
+              dialogoEstante(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              break
+            case "4":
+              dialogoQuadro(client, message)
+              atualizaStage(cliente.id, 8, "dialogocaminho2");
+              break
+            case "5":
+              dialogoAtendente(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              break
         }
-
-        // coloque aqui os proximos ifs que esta faltando
-
-
-
+      }else if(stage === '6'){
+        const mensagem = message.body
+          switch(mensagem){
+            case "1":
+              dialogoAtendente(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              break
+            case '2':
+              dialogoAtendente(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              break
+            case '3':
+              dialogoduvida2(client, message)
+              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              break
+            }
+      }else if(stage === 7){
+        dialogoAtendente(client, message)
+        atualizaStage(cliente.id, 10, "dialogocaminho2");
+      }else if(stage === 8){
+        const mensagem = message.body
+        switch(mensagem){
+          case "1":
+            dialogoAtendente(client, message)
+            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            break
+          case '2':
+            dialogoAtendente(client, message)
+            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            break
+          case '3':
+            dialogoduvida1(client, message)
+            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            break
+          }
+      }
       }
     }
   });

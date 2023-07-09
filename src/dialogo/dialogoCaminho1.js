@@ -13,23 +13,3 @@ async function dialogoCaminho(client, message) {
 }
 
 export default dialogoCaminho;
-
-async function dialogoInicial(client, message) {
-  const texto =
-    "Bem-vindo à Loja Tendenci! Por favor, escolha o item desejado enviando a numeração correspondente.\nJá é cliente nosso?\n1 - Sim\n2 - Não";
-
-  await client
-    .startTyping(message.from) // Inicia a digitação no número de telefone do remetente
-    .then(async () => {
-      await client.sendText(message.from, texto);
-      console.log("Mensagem enviada com sucesso!");
-    })
-    .catch((erro) => {
-      console.error("Erro ao enviar mensagem: ", erro);
-      client.on("message", async (message) => {
-        await dialogoInicial(client, message);
-      });
-
-      client.initialize();
-    });
-}
