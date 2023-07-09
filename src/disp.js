@@ -105,55 +105,55 @@ function start(client) {
         //  if de seguraça para restaurar model
         if (message.body === "0") {
           const id = cliente.id;
-          const dialogo = await Cliente.findOne({
-            attributes: dialogo,
+          const clienteDialogo = await Cliente.findOne({raw: true,
             where: {
               id: id,
             },
           });
+          const dialogo = clienteDialogo.dialogo
           switch (dialogo) {
-            case "dialogoInicial":
+            case "dialogoinicial":
               dialogoInicial(client, message);
-              atualizaStage(cliente.id, 2, "dialogoInicial");
+              atualizaStage(cliente.id, 2, "dialogoinicial");
               break;
-            case "dialogoCaminho1":
-              dialogoCaminho(client, message);
-              atualizaStage(cliente.id, 3, "dialogoCaminho1");
+            case "dialogocaminho1":
+              dialogoCaminho1(client, message);
+              atualizaStage(cliente.id, 3, "dialogocaminho1");
               break;
             case "dialogoOrcamento":
               dialogoOrcamento(client, message);
               atualizaStage(cliente.id, 4, "dialogoOrcamento");
               break;
-            case "dialogoCaminho2":
-              dialogoSac(client, message);
-              atualizaStage(cliente.id, 3, "dialogoCaminho2");
+            case "dialogocaminho2":
+              dialogoCaminho2(client, message);
+              atualizaStage(cliente.id, 3, "dialogocaminho2");
               break;
             case "dialogoAtendente":
-              dialogoSac(client, message);
+              dialogoAtendente(client, message);
               atualizaStage(cliente.id, 10, "dialogoAtendente");
               break;
             case "dialogoduvida1":
-              dialogoSac(client, message);
+              dialogoduvida1(client, message);
               atualizaStage(cliente.id, 10, "dialogoduvida1");
               break;
             case "dialogoduvida2":
-              dialogoSac(client, message);
+              dialogoduvida2(client, message);
               atualizaStage(cliente.id, 10, "dialogoduvida2");
               break;
             case "dialogoEstante":
-              dialogoSac(client, message);
+              dialogoEstante(client, message);
               atualizaStage(cliente.id, 10, "dialogoEstante");
               break;
             case "dialogoMovel":
-              dialogoSac(client, message);
+              dialogoMovel(client, message);
               atualizaStage(cliente.id, 6, "dialogoMovel");
               break;
             case "dialogoOrcamento":
-              dialogoSac(client, message);
+              dialogoOrcamento(client, message);
               atualizaStage(cliente.id, 4, "dialogoOrcamento");
               break;
             case "dialogoPlanejado":
-              dialogoSac(client, message);
+              dialogoPlanejado(client, message);
               atualizaStage(cliente.id, 7, "dialogoPlanejado");
               break;
             case "dialogoQuadros":
@@ -163,8 +163,6 @@ function start(client) {
             case "dialogoSac":
               dialogoSac(client, message);
               atualizaStage(cliente.id, 5, "dialogoSac");
-              break;
-            default:
               break;
           } 
         }else if (message.body && stage === 1) {
@@ -189,15 +187,15 @@ function start(client) {
           switch(mensagem){
             case "1":
               dialogoOrcamento(client, message)
-              atualizaStage(cliente.id, 4, "dialogocaminho2");
+              atualizaStage(cliente.id, 4, " dialogoOrcamento");
               break;
             case "2":
               dialogoSac(client, message)
-              atualizaStage(cliente.id, 5, "dialogocaminho2");
+              atualizaStage(cliente.id, 5, "dialogoSac");
               break;
             case "3":
               dialogoAtendente(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2"); // Verificar se o stage esta correto
+              atualizaStage(cliente.id, 10, "dialogoAtendente"); // Verificar se o stage esta correto
               break;
           }
         }else if(stage === 4){
@@ -205,58 +203,58 @@ function start(client) {
           switch(mensagem){
             case "1":
               dialogoMovel(client, message)
-              atualizaStage(cliente.id, 6, "dialogocaminho2");
+              atualizaStage(cliente.id, 6, "dialogoMovel");
               break
             case "2":
               dialogoPlanejado(client, message)
-              atualizaStage(cliente.id, 7, "dialogocaminho2");
+              atualizaStage(cliente.id, 7, "dialogoPlanejado");
               break
             case "3":
               dialogoEstante(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              atualizaStage(cliente.id, 10, "dialogoEstante");
               break
             case "4":
               dialogoQuadro(client, message)
-              atualizaStage(cliente.id, 8, "dialogocaminho2");
+              atualizaStage(cliente.id, 8, "dialogoQuadro");
               break
             case "5":
               dialogoAtendente(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              atualizaStage(cliente.id, 10, "dialogoAtendente");
               break
         }
-      }else if(stage === '6'){
+      }else if(stage === 6){
         const mensagem = message.body
           switch(mensagem){
             case "1":
               dialogoAtendente(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              atualizaStage(cliente.id, 10, "dialogoAtendente");
               break
             case '2':
               dialogoAtendente(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              atualizaStage(cliente.id, 10, "dialogoAtendente");
               break
             case '3':
               dialogoduvida2(client, message)
-              atualizaStage(cliente.id, 10, "dialogocaminho2");
+              atualizaStage(cliente.id, 10, "dialogoduvida2");
               break
             }
       }else if(stage === 7){
         dialogoAtendente(client, message)
-        atualizaStage(cliente.id, 10, "dialogocaminho2");
+        atualizaStage(cliente.id, 10, "dialogoAtendente");
       }else if(stage === 8){
         const mensagem = message.body
         switch(mensagem){
           case "1":
             dialogoAtendente(client, message)
-            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            atualizaStage(cliente.id, 10, "dialogoAtendente");
             break
           case '2':
             dialogoAtendente(client, message)
-            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            atualizaStage(cliente.id, 10, "dialogoAtendente");
             break
           case '3':
             dialogoduvida1(client, message)
-            atualizaStage(cliente.id, 10, "dialogocaminho2");
+            atualizaStage(cliente.id, 10, "dialogoduvida1");
             break
           }
       }
