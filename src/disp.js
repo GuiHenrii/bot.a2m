@@ -114,55 +114,59 @@ function start(client) {
           switch (dialogo) {
             case "dialogoinicial":
               dialogoInicial(client, message);
-              atualizaStage(cliente.id, 2, "dialogoinicial");
+              atualizaStage(cliente.id, 2, "reiniciar");
               break;
             case "dialogocaminho1":
               dialogoCaminho1(client, message);
-              atualizaStage(cliente.id, 3, "dialogocaminho1");
+              atualizaStage(cliente.id, 3, "reiniciar");
               break;
             case "dialogoOrcamento":
               dialogoOrcamento(client, message);
-              atualizaStage(cliente.id, 4, "dialogoOrcamento");
+              atualizaStage(cliente.id, 4, "reiniciar");
               break;
             case "dialogocaminho2":
               dialogoCaminho2(client, message);
-              atualizaStage(cliente.id, 3, "dialogocaminho2");
+              atualizaStage(cliente.id, 3, "reiniciar");
               break;
             case "dialogoAtendente":
               dialogoAtendente(client, message);
-              atualizaStage(cliente.id, 10, "dialogoAtendente");
+              atualizaStage(cliente.id, 10, "reiniciar");
               break;
             case "dialogoduvida1":
               dialogoduvida1(client, message);
-              atualizaStage(cliente.id, 10, "dialogoduvida1");
+              atualizaStage(cliente.id, 10, "reiniciar");
               break;
             case "dialogoduvida2":
               dialogoduvida2(client, message);
-              atualizaStage(cliente.id, 10, "dialogoduvida2");
+              atualizaStage(cliente.id, 10, "reiniciar");
               break;
             case "dialogoEstante":
               dialogoEstante(client, message);
-              atualizaStage(cliente.id, 10, "dialogoEstante");
+              atualizaStage(cliente.id, 10, "reiniciar");
               break;
             case "dialogoMovel":
               dialogoMovel(client, message);
-              atualizaStage(cliente.id, 6, "dialogoMovel");
+              atualizaStage(cliente.id, 6, "reiniciar");
               break;
             case "dialogoOrcamento":
               dialogoOrcamento(client, message);
-              atualizaStage(cliente.id, 4, "dialogoOrcamento");
+              atualizaStage(cliente.id, 4, "reiniciar");
               break;
             case "dialogoPlanejado":
               dialogoPlanejado(client, message);
-              atualizaStage(cliente.id, 7, "dialogoPlanejado");
+              atualizaStage(cliente.id, 7, "reiniciar");
               break;
             case "dialogoQuadros":
               dialogoQuadros(client, message);
-              atualizaStage(cliente.id, 7, "dialogoQuadros");
+              atualizaStage(cliente.id, 7, "reiniciar");
               break;
             case "dialogoSac":
               dialogoSac(client, message);
-              atualizaStage(cliente.id, 5, "dialogoSac");
+              atualizaStage(cliente.id, 5, "reiniciar");
+              break;
+            default:
+              dialogoInicial(client, message);
+              atualizaStage(cliente.id, 2, "dialogoinicial");
               break;
           } 
         }else if (message.body && stage === 1) {
