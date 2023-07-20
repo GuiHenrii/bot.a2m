@@ -1,6 +1,6 @@
 async function dialogoInicial(client, message) {
   const texto =
-  "Bem-vindo à Loja Tendenci! Por favor, escolha o item desejado enviando a numeração correspondente.\nJá é cliente nosso?\n1 - Sim\n2 - Não"
+    "Olá. Sou o Alex, Uma inteligencia artificial desenvolvida completamente pela A2M. Como posso ajudar?\n\n1 - Vantagens do sistema\n2 - Ver Site\n3 - Funcionalidades\n4 - Falar com especialista\n5 - Falar na Administração.";
 
   await client
     .sendText(message.from, texto)

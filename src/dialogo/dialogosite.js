@@ -1,6 +1,6 @@
-async function dialogoInicial(client, message) {
+async function dialogoSite(client, message) {
   const texto =
-    "Bem-vindo à Loja Tendenci! Por favor, escolha o item desejado enviando a numeração correspondente.\nJá é cliente nosso?\n1 - Sim\n2 - Não";
+    "*Acesse o nosso site e descubra a maravilha da tecnologia.*\nhttps://www.a2mprodutora.com.br/\n\nDigite *0* para voltar ao menu inicial.";
 
   await client
     .sendText(message.from, texto)
@@ -12,4 +12,4 @@ async function dialogoInicial(client, message) {
     });
 }
 
-export default dialogoInicial;
+export default dialogoSite;
